@@ -11743,9 +11743,349 @@ div#notebook {
     </script>
     <!-- End of mathjax configuration --></head>
 <body>
+<p>aaa</p>
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">pylab</span> inline
+<span class="kn">import</span> <span class="nn">warnings</span> 
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="c1"># ワーニング を表示させない。</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Populating the interactive namespace from numpy and matplotlib
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 価格情報を読込みます。</span>
+<span class="kn">from</span> <span class="nn">sysdata.csvdata</span> <span class="k">import</span> <span class="n">csvFuturesData</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">csvFuturesData</span><span class="p">()</span>
+
+<span class="c1"># インスツルメントの一覧</span>
+<span class="n">data</span><span class="o">=</span><span class="n">csvFuturesData</span><span class="p">()</span>
+<span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get_instrument_list</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;CORN, LEANHOG, LIVECOW, SOYBEAN, WHEAT, KR10, KR3, BOBL, BTP, BUND, OAT, SHATZ, US10, US2, US20, US5, V2X, VIX, KOSPI, AEX, CAC, SMI, NASDAQ, SP500, AUD, EUR, GBP, JPY, MXP, NZD, COPPER, GOLD, PALLAD, PLAT, CRUDE_W, GAS_US, EDOLLAR, EUROSTX&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 定義済みのトレードルール EMAクロスを使用します。</span>
+
+<span class="kn">from</span> <span class="nn">systems.provided.example.rules</span> <span class="k">import</span> <span class="n">ewmac_forecast_with_defaults</span> <span class="k">as</span> <span class="n">ewmac</span>
+<span class="kn">from</span> <span class="nn">systems.forecasting</span> <span class="k">import</span> <span class="n">Rules</span>
+
+<span class="c1"># ルールを作成するには幾つかの方法があります。</span>
+
+<span class="c1"># そのまま、ewmac ルールを渡す方法</span>
+<span class="n">my_rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">(</span><span class="n">ewmac</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_rules</span><span class="o">.</span><span class="n">trading_rules</span><span class="p">())</span>
+
+
+<span class="c1"># キーを付けて辞書型で渡すことも出来ます</span>
+<span class="n">my_rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">ewmac</span><span class="o">=</span><span class="n">ewmac</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_rules</span><span class="o">.</span><span class="n">trading_rules</span><span class="p">())</span>
+
+<span class="c1"># キーを指定しない場合はデフォルトのキー（ rule0 ）が使用されます。</span>
+<span class="c1"># ルールは TradingRuleオブジェクトとして保存されます。TradingRuleオブジェクトは次の３つの属性を持っています。</span>
+<span class="c1"># ・function </span>
+<span class="c1"># ・function が必要とするデータ </span>
+<span class="c1"># ・function が必要とする引数 </span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;rule0&#39;: TradingRule; function: &lt;function ewmac_forecast_with_defaults at 0x7fdbf97b3b70&gt;, data:  and other_args: }
+{&#39;ewmac&#39;: TradingRule; function: &lt;function ewmac_forecast_with_defaults at 0x7fdbf97b3b70&gt;, data:  and other_args: }
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 今度は先程のルールを使ってシステムを構成します。</span>
+<span class="kn">from</span> <span class="nn">systems.basesystem</span> <span class="k">import</span> <span class="n">System</span>
+<span class="n">my_system</span> <span class="o">=</span> <span class="n">System</span><span class="p">([</span><span class="n">my_rules</span><span class="p">],</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># EMA交差の予測値です。</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_system</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get_raw_forecast</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2016-07-04    3.704434
+2016-07-05    3.879053
+2016-07-06    4.081771
+2016-07-07    4.277728
+2016-07-08    4.493940
+Freq: B, dtype: float64
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># ルールにパラメーターを渡すには TradingRule オブジェクトを使います。</span>
+<span class="kn">from</span> <span class="nn">systems.forecasting</span> <span class="k">import</span> <span class="n">TradingRule</span>
+
+<span class="c1"># パラメータはタプルや辞書型を使って渡します。</span>
+<span class="n">ewmac_8</span> <span class="o">=</span> <span class="n">TradingRule</span><span class="p">((</span><span class="n">ewmac</span><span class="p">,</span> <span class="p">[],</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Lfast</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">Lslow</span><span class="o">=</span><span class="mi">32</span><span class="p">)))</span> <span class="c1"># タプル</span>
+<span class="n">ewmac_32</span> <span class="o">=</span> <span class="n">TradingRule</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">ewmac</span><span class="p">,</span> <span class="n">other_args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">Lfast</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">Lslow</span><span class="o">=</span><span class="mi">128</span><span class="p">)))</span> <span class="c1"># 辞書型</span>
+
+<span class="c1"># ２つのルールを使ったシステムを作ります。</span>
+<span class="n">my_rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">ewmac8</span><span class="o">=</span><span class="n">ewmac_8</span><span class="p">,</span> <span class="n">ewmac32</span><span class="o">=</span><span class="n">ewmac_32</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_rules</span><span class="o">.</span><span class="n">trading_rules</span><span class="p">()[</span><span class="s1">&#39;ewmac32&#39;</span><span class="p">])</span>
+
+<span class="c1"># このルールの予測値を出力するにはこうします。</span>
+<span class="n">my_system</span> <span class="o">=</span> <span class="n">System</span><span class="p">([</span><span class="n">my_rules</span><span class="p">],</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">my_system</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get_raw_forecast</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>TradingRule; function: &lt;function ewmac_forecast_with_defaults at 0x7fdbf97b3b70&gt;, data:  and other_args: Lfast, Lslow
+</pre>
+</div>
+</div>
+
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2016-07-04    3.704434
+2016-07-05    3.879053
+2016-07-06    4.081771
+2016-07-07    4.277728
+2016-07-08    4.493940
+Freq: B, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># configオブジェクトを使うとこれらの設定を、configファイルに残すことが出来ます。</span>
+<span class="kn">from</span> <span class="nn">sysdata.configdata</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="n">my_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
+<span class="n">empty_rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">()</span>
+<span class="n">my_config</span><span class="o">.</span><span class="n">trading_rules</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ewmac8</span><span class="o">=</span><span class="n">ewmac_8</span><span class="p">,</span> <span class="n">ewmac32</span><span class="o">=</span><span class="n">ewmac_32</span><span class="p">)</span>
+
+<span class="c1"># 空のルールにconfigに設定済みの内容を追加します。</span>
+<span class="n">my_system</span> <span class="o">=</span> <span class="n">System</span><span class="p">([</span><span class="n">empty_rules</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="n">my_config</span><span class="p">)</span>
+<span class="n">my_system</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get_raw_forecast</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2016-07-04    3.704434
+2016-07-05    3.879053
+2016-07-06    4.081771
+2016-07-07    4.277728
+2016-07-08    4.493940
+Freq: B, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 「システムトレーディング ７章」に従って予測値のスケーリングを行います。</span>
+<span class="kn">from</span> <span class="nn">systems.forecast_scale_cap</span> <span class="k">import</span> <span class="n">ForecastScaleCap</span>
+<span class="n">my_config_</span><span class="o">=</span><span class="n">Config</span><span class="p">()</span>
+<span class="n">my_config_</span><span class="o">.</span><span class="n">trading_rules</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ewmac8</span><span class="o">=</span><span class="n">ewmac_8</span><span class="p">,</span> <span class="n">ewmac32</span><span class="o">=</span><span class="n">ewmac_32</span><span class="p">)</span>
+<span class="n">my_config_</span><span class="o">.</span><span class="n">instruments</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;US10&quot;</span><span class="p">,</span> <span class="s2">&quot;BUND&quot;</span><span class="p">]</span>
+
+<span class="c1"># 市場データを基に予測値スカラーを計算します。</span>
+<span class="n">my_config_</span><span class="o">.</span><span class="n">use_forecast_scale_estimates</span><span class="o">=</span><span class="kc">True</span>
+
+<span class="n">fcs</span><span class="o">=</span><span class="n">ForecastScaleCap</span><span class="p">()</span>
+<span class="n">my_system_</span> <span class="o">=</span> <span class="n">System</span><span class="p">([</span><span class="n">fcs</span><span class="p">,</span> <span class="n">empty_rules</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="n">my_config_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_system_</span><span class="o">.</span><span class="n">forecastScaleCap</span><span class="o">.</span><span class="n">get_forecast_scalar</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_system_</span><span class="o">.</span><span class="n">forecastScaleCap</span><span class="o">.</span><span class="n">get_forecast_scalar</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2016-07-04    5.853348
+2016-07-05    5.853095
+2016-07-06    5.852801
+2016-07-07    5.852487
+2016-07-08    5.852135
+Freq: B, dtype: float64
+&gt;
+2016-07-04    2.709248
+2016-07-05    2.709233
+2016-07-06    2.709201
+2016-07-07    2.709152
+2016-07-08    2.709086
+Freq: B, dtype: float64
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 直接予測値スカラーを指定することも出来ます。</span>
+<span class="kn">from</span> <span class="nn">systems.forecast_scale_cap</span> <span class="k">import</span> <span class="n">ForecastScaleCapFixed</span>
+
+<span class="n">my_config</span><span class="o">.</span><span class="n">forecast_scalars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ewmac8</span><span class="o">=</span><span class="mf">5.3</span><span class="p">,</span> <span class="n">ewmac32</span><span class="o">=</span><span class="mf">2.65</span><span class="p">)</span>
+<span class="n">fcs</span> <span class="o">=</span> <span class="n">ForecastScaleCapFixed</span><span class="p">()</span>
+<span class="n">my_system</span> <span class="o">=</span> <span class="n">System</span><span class="p">([</span><span class="n">fcs</span><span class="p">,</span> <span class="n">my_rules</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="n">my_config</span><span class="p">)</span>
+
+<span class="n">my_system</span><span class="o">.</span><span class="n">forecastScaleCap</span><span class="o">.</span><span class="n">get_capped_forecast</span><span class="p">(</span><span class="s2">&quot;EDOLLAR&quot;</span><span class="p">,</span> <span class="s2">&quot;ewmac32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2016-07-04     9.816751
+2016-07-05    10.279490
+2016-07-06    10.816693
+2016-07-07    11.335980
+2016-07-08    11.908942
+Freq: B, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
